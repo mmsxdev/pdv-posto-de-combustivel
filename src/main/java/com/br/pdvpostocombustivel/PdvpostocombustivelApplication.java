@@ -1,10 +1,9 @@
 package com.br.pdvpostocombustivel;
 
 import com.br.pdvpostocombustivel.domain.entity.Pessoa;
+import jakarta.persistence.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
 public class PdvpostocombustivelApplication {
 
 	public static void main(String[] args) {
