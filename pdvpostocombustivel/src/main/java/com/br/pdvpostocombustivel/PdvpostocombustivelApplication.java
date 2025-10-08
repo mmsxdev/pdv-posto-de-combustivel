@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
         info = @Info(
                 title = "PDV Posto Combustível API",
                 version = "v1",
-                description = "API de exemplo com CRUD de Pessoas (Spring Boot 3 / Java 17).",
-                contact = @Contact(name = "Prof. Esp. Ednilton Rauh", email = "ednilton@example.com"),
+                description = "API de exemplo com CRUD de Pessoas (Spring Boot 3 / Java 21).",
+                contact = @Contact(name = "Miguel Melo Santos", email = "miguel@example.com"),
                 license = @License(name = "MIT")
         ),
         servers = {
