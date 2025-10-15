@@ -1,15 +1,17 @@
 package com.br.pdvpostocombustivel.api.estoque.dto;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.br.pdvpostocombustivel.enums.TipoEstoque;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record EstoqueResponse(
+        Long id,
+        TipoEstoque tipoEstoque,
         BigDecimal quantidade,
-        String localTannque,
+        String localTanque,
         String localEndereco,
-        String localFabricacao,
+        String loteFabricacao,
         LocalDate dataValidade
 ) {
 }

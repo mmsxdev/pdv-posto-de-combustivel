@@ -2,11 +2,16 @@ package com.br.pdvpostocombustivel.domain.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import com.br.pdvpostocombustivel.enums.TipoCusto;
 
 @Entity
 @Table(name = "custo")
@@ -16,28 +21,37 @@ public class Custo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //atributos
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_custo", nullable = false, length = 20)
+    private TipoCusto tipoCusto;
 
-    @Column(length = 5, nullable = false)
-    private Double imposto;
+    @NotNull
+    @Column(name = "imposto", nullable = false, precision = 5, scale = 2)
+    private BigDecimal imposto;
 
-    @Column(length = 10, nullable = false)
-    private Double custoVariavel;
+    @NotNull
+    @Column(name = "custo_variavel", nullable = false, precision = 10, scale = 2)
+    private BigDecimal custoVariavel;
 
-    @Column(length = 10, nullable = false)
-    private Double custoFixo;
+    @NotNull
+    @Column(name = "custo_fixo", nullable = false, precision = 10, scale = 2)
+    private BigDecimal custoFixo;
 
-    @Column(length = 5, nullable = false)
-    private Double margemLucro;
+    @NotNull
+    @Column(name = "margem_lucro", nullable = false, precision = 5, scale = 2)
+    private BigDecimal margemLucro;
 
-    @Column(length = 10, nullable = false)
+    @NotNull
+    @Column(name = "data_processamento", nullable = false)
     private LocalDate dataProcessamento;
 
     //construtor
     public Custo() {
     }
     
-    public Custo(Double imposto, Double custoVariavel, Double custoFixo, Double margemLucro, LocalDate dataProcessamento) {
+    public Custo(TipoCusto tipoCusto, BigDecimal imposto, BigDecimal custoVariavel, BigDecimal custoFixo, BigDecimal margemLucro, LocalDate dataProcessamento) {
+        this.tipoCusto = tipoCusto;
         this.imposto = imposto;
         this.custoVariavel = custoVariavel;
         this.custoFixo = custoFixo;
@@ -50,36 +64,44 @@ public class Custo {
         return id;
     }
     
-    public Double getCustoFixo() {
+    public TipoCusto getTipoCusto() {
+        return tipoCusto;
+    }
+
+    public BigDecimal getCustoFixo() {
         return custoFixo;
     }
     public LocalDate getDataProcessamento() {
         return dataProcessamento;
     }
-    public Double getCustoVariavel() {
+    public BigDecimal getCustoVariavel() {
         return custoVariavel;
     }
-    public Double getImposto() {
+    public BigDecimal getImposto() {
         return imposto;
     }
-    public Double getMargemLucro() {
+    public BigDecimal getMargemLucro() {
         return margemLucro;
     }
 
     //setters
-    public void setCustoFixo(Double custoFixo) {
-
+    public void setTipoCusto(TipoCusto tipoCusto) {
+        this.tipoCusto = tipoCusto;
     }
-    public void setCustoVariavel(Double custoVariavel) {
+
+    public void setCustoFixo(BigDecimal custoFixo) {
+        this.custoFixo = custoFixo;
+    }
+    public void setCustoVariavel(BigDecimal custoVariavel) {
         this.custoVariavel = custoVariavel;
     }
     public void setDataProcessamento(LocalDate dataProcessamento) {
         this.dataProcessamento = dataProcessamento;
     }
-    public void setImposto(Double imposto) {
+    public void setImposto(BigDecimal imposto) {
         this.imposto = imposto;
     }
-    public void setMargemLucro(Double margemLucro) {
+    public void setMargemLucro(BigDecimal margemLucro) {
         this.margemLucro = margemLucro;
     }
 }
