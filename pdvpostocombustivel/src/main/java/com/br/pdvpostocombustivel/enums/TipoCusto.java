@@ -1,7 +1,7 @@
 package com.br.pdvpostocombustivel.enums;
 
 public enum TipoCusto {
-    ENERGIA("Custo de Enengia"),
+    ENERGIA("Custo de Energia"),
     FRETE("Custo de Frete"),
     AGUA("Custo de Água");
 

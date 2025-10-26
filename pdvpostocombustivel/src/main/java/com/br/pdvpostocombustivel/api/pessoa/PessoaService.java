@@ -116,10 +116,12 @@ public class PessoaService {
 
     private PessoaResponse toResponse(Pessoa p) {
         return new PessoaResponse(
+                p.getId(),
                 p.getNomeCompleto(),
                 p.getCpfCnpj(),
                 p.getNumeroCtps(),
-                p.getDataNascimento()
+                p.getDataNascimento(),
+                p.getTipoPessoa()
         );
     }
 }
