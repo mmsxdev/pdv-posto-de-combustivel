@@ -2,8 +2,10 @@ package com.br.pdvpostocombustivel.api.preco;
 
 import com.br.pdvpostocombustivel.api.preco.dto.PrecoRequest;
 import com.br.pdvpostocombustivel.api.preco.dto.PrecoResponse;
+import com.br.pdvpostocombustivel.domain.entity.Produto;
 import com.br.pdvpostocombustivel.domain.entity.Preco;
 import com.br.pdvpostocombustivel.domain.repository.PrecoRepository;
+import com.br.pdvpostocombustivel.domain.repository.ProdutoRepository;
 import com.br.pdvpostocombustivel.exception.PrecoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class PrecoService {
 
     private final PrecoRepository precoRepository;
+    private final ProdutoRepository produtoRepository;
 
     @Transactional(readOnly = true)
     public List<PrecoResponse> getAll() {
@@ -34,13 +37,16 @@ public class PrecoService {
 
     @Transactional
     public PrecoResponse save(PrecoRequest precoRequest) {
-        precoRepository.findByTipoEstoqueAndDataVigencia(precoRequest.tipoEstoque(), precoRequest.dataVigencia())
+        Produto produto = produtoRepository.findById(precoRequest.produtoId())
+                .orElseThrow(() -> new PrecoException("Produto com ID " + precoRequest.produtoId() + " não encontrado."));
+
+        precoRepository.findByProdutoAndDataVigencia(produto, precoRequest.dataVigencia())
                 .ifPresent(p -> {
-                    throw new PrecoException("Já existe um preço para " + precoRequest.tipoEstoque() + " na data " + precoRequest.dataVigencia());
+                    throw new PrecoException("Já existe um preço para o produto '" + produto.getNome() + "' na data " + precoRequest.dataVigencia());
                 });
 
         Preco preco = new Preco();
-        fromRequest(preco, precoRequest);
+        fromRequest(preco, produto, precoRequest);
         return toResponse(precoRepository.save(preco));
     }
 
@@ -48,7 +54,10 @@ public class PrecoService {
     public PrecoResponse update(Long id, PrecoRequest precoRequest) {
         Preco preco = precoRepository.findById(id)
                 .orElseThrow(() -> new PrecoException("Preço com ID " + id + " não encontrado para atualização."));
-        fromRequest(preco, precoRequest);
+        Produto produto = produtoRepository.findById(precoRequest.produtoId())
+                .orElseThrow(() -> new PrecoException("Produto com ID " + precoRequest.produtoId() + " não encontrado."));
+
+        fromRequest(preco, produto, precoRequest);
         return toResponse(precoRepository.save(preco));
     }
 
@@ -61,11 +70,16 @@ public class PrecoService {
     }
 
     private PrecoResponse toResponse(Preco preco) {
-        return new PrecoResponse(preco.getId(), preco.getTipoEstoque(), preco.getValor(), preco.getDataVigencia());
+        return new PrecoResponse(preco.getId(),
+                preco.getProduto().getId(),
+                preco.getProduto().getNome(),
+                preco.getProduto().getReferencia(),
+                preco.getValor(),
+                preco.getDataVigencia());
     }
 
-    private void fromRequest(Preco preco, PrecoRequest request) {
-        preco.setTipoEstoque(request.tipoEstoque());
+    private void fromRequest(Preco preco, Produto produto, PrecoRequest request) {
+        preco.setProduto(produto);
         preco.setValor(request.valor());
         preco.setDataVigencia(request.dataVigencia());
     }

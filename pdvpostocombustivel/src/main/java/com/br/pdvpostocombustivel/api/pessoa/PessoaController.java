@@ -1,11 +1,13 @@
 package com.br.pdvpostocombustivel.api.pessoa;
 
 
+import com.br.pdvpostocombustivel.api.common.PaginatedResponse;
 import com.br.pdvpostocombustivel.api.pessoa.dto.PessoaRequest;
 import com.br.pdvpostocombustivel.api.pessoa.dto.PessoaResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,11 +37,13 @@ public class PessoaController {
     }
 
     @GetMapping
-    public Page<PessoaResponse> list(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size,
-                                     @RequestParam(defaultValue = "id") String sortBy,
-                                     @RequestParam(defaultValue = "ASC") Sort.Direction dir) {
-        return service.list(page, size, sortBy, dir);
+    public ResponseEntity<PaginatedResponse<PessoaResponse>> list(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size,
+                                                                  @RequestParam(defaultValue = "id") String sortBy,
+                                                                  @RequestParam(defaultValue = "ASC") Sort.Direction dir) {
+        Page<PessoaResponse> pessoaPage = service.list(page, size, sortBy, dir);
+        PaginatedResponse<PessoaResponse> response = new PaginatedResponse<>(pessoaPage);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.br.pdvpostocombustivel.api.produto;
 
+import com.br.pdvpostocombustivel.api.preco.dto.PrecoResponse;
 import com.br.pdvpostocombustivel.api.produto.dto.ProdutoRequest;
 import com.br.pdvpostocombustivel.api.produto.dto.ProdutoResponse;
 import jakarta.validation.Valid;
@@ -25,6 +26,11 @@ public class ProdutoController {
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoResponse> getProdutoById(@PathVariable Long id) {
         return ResponseEntity.ok(produtoService.getById(id));
+    }
+
+    @GetMapping("/{id}/preco-atual")
+    public ResponseEntity<PrecoResponse> getPrecoAtual(@PathVariable Long id) {
+        return ResponseEntity.ok(produtoService.getPrecoAtual(id));
     }
 
     @PostMapping

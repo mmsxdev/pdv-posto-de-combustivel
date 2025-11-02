@@ -1,6 +1,5 @@
 package com.br.pdvpostocombustivel.domain.entity;
 
-import com.br.pdvpostocombustivel.enums.TipoEstoque;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -16,7 +15,7 @@ import java.time.LocalDate;
 @Table(name = "preco",
         uniqueConstraints = {
                 // Garante que só existe um preço por tipo de combustível para uma data de vigência
-                @UniqueConstraint(name = "uk_preco_tipo_data", columnNames = {"tipo_estoque", "data_vigencia"})
+                @UniqueConstraint(name = "uk_preco_produto_data", columnNames = {"produto_id", "data_vigencia"})
         })
 @Getter
 @Setter
@@ -28,10 +27,9 @@ public class Preco {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_estoque", nullable = false, length = 30)
-    private TipoEstoque tipoEstoque;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "produto_id", nullable = false)
+    private Produto produto;
 
     @NotNull
     @Positive

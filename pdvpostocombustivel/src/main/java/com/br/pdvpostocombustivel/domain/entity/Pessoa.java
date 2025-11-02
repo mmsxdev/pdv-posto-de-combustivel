@@ -3,6 +3,9 @@ package com.br.pdvpostocombustivel.domain.entity;
 import com.br.pdvpostocombustivel.enums.TipoPessoa;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -14,6 +17,9 @@ import java.time.LocalDate;
                 @UniqueConstraint(name = "uk_pessoas_cpf_cnpj", columnNames = "cpf_cnpj")
         }
 )
+@Getter
+@Setter
+@NoArgsConstructor
 public class Pessoa {
 
     @Id
@@ -45,8 +51,19 @@ public class Pessoa {
     @Column(name = "tipo_pessoa", nullable = false, length = 15)
     private TipoPessoa tipoPessoa;
 
+    // RELACIONAMENTO 1..1: Uma Pessoa tem um Contato.
+    // CascadeType.ALL: Se a Pessoa for salva/excluída, o Contato associado também será.
+    // orphanRemoval = true: Se o Contato for desassociado da Pessoa, ele será removido do banco.
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "contato_id", referencedColumnName = "id")
+    private Contato contato;
+
+    // RELACIONAMENTO 1..1: Uma Pessoa pode ter um Acesso.
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "acesso_id", referencedColumnName = "id")
+    private Acesso acesso;
+
     /** Construtor JPA */
-    protected Pessoa() {}
 
     public Pessoa(String nomeCompleto,
                   String cpfCnpj,
@@ -59,23 +76,4 @@ public class Pessoa {
         this.dataNascimento = dataNascimento;
         this.tipoPessoa = tipoPessoa;
     }
-
-    // Getters/Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getNomeCompleto() { return nomeCompleto; }
-    public void setNomeCompleto(String nomeCompleto) { this.nomeCompleto = nomeCompleto; }
-
-    public String getCpfCnpj() { return cpfCnpj; }
-    public void setCpfCnpj(String cpfCnpj) { this.cpfCnpj = cpfCnpj; }
-
-    public Long getNumeroCtps() { return numeroCtps; }
-    public void setNumeroCtps(Long numeroCtps) { this.numeroCtps = numeroCtps; }
-
-    public LocalDate getDataNascimento() { return dataNascimento; }
-    public void setDataNascimento(LocalDate dataNascimento) { this.dataNascimento = dataNascimento; }
-
-    public TipoPessoa getTipoPessoa() { return tipoPessoa; }
-    public void setTipoPessoa(TipoPessoa tipoPessoa) { this.tipoPessoa = tipoPessoa; }
 }

@@ -1,14 +1,18 @@
 package com.br.pdvpostocombustivel.api.produto;
 
+import com.br.pdvpostocombustivel.api.preco.dto.PrecoResponse;
 import com.br.pdvpostocombustivel.api.produto.dto.ProdutoRequest;
 import com.br.pdvpostocombustivel.api.produto.dto.ProdutoResponse;
+import com.br.pdvpostocombustivel.domain.entity.Preco;
 import com.br.pdvpostocombustivel.domain.entity.Produto;
+import com.br.pdvpostocombustivel.domain.repository.PrecoRepository;
 import com.br.pdvpostocombustivel.domain.repository.ProdutoRepository;
 import com.br.pdvpostocombustivel.exception.ProdutoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final PrecoRepository precoRepository;
 
     @Transactional(readOnly = true)
     public List<ProdutoResponse> getAll() {
@@ -30,6 +35,19 @@ public class ProdutoService {
         return produtoRepository.findById(id)
                 .map(this::toResponse)
                 .orElseThrow(() -> new ProdutoException("Produto com ID " + id + " não encontrado."));
+    }
+
+    @Transactional(readOnly = true)
+    public PrecoResponse getPrecoAtual(Long produtoId) {
+        Produto produto = produtoRepository.findById(produtoId)
+                .orElseThrow(() -> new ProdutoException("Produto com ID " + produtoId + " não encontrado."));
+
+        Preco preco = precoRepository.findFirstByProdutoAndDataVigenciaLessThanEqualOrderByDataVigenciaDesc(produto, LocalDate.now())
+                .orElseThrow(() -> new ProdutoException("Produto '" + produto.getNome() + "' não possui preço cadastrado."));
+
+        return new PrecoResponse(preco.getId(), preco.getProduto().getId(), preco.getProduto().getNome(),
+                preco.getProduto().getReferencia(), preco.getValor(), preco.getDataVigencia());
+
     }
 
     @Transactional

@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "produto",
         uniqueConstraints = {
@@ -50,4 +53,13 @@ public class Produto {
     @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
     private TipoProduto categoria;
+
+    // RELACIONAMENTO 1..*: Um Produto pode ter vários registros de Estoque.
+    // mappedBy = "produto": Indica que a entidade Estoque é a dona do relacionamento (ela tem a foreign key).
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Estoque> estoques = new ArrayList<>();
+
+    // RELACIONAMENTO 1..*: Um Produto pode ter um histórico de Preços.
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Preco> precos = new ArrayList<>();
 }

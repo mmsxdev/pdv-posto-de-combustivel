@@ -10,6 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,6 +24,10 @@ import jakarta.validation.constraints.Size;
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_acesso_usuario", columnNames = "usuario")
         })
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Acesso {
 
     @Id
@@ -43,40 +51,9 @@ public class Acesso {
     @Column(name = "tipo_acesso", nullable = false, length = 20)
     private com.br.pdvpostocombustivel.enums.TipoAcesso tipoAcesso;
 
-    //contrutor
-    public Acesso() {
-    }
-    
     public Acesso(String usuario, String senha, com.br.pdvpostocombustivel.enums.TipoAcesso tipoAcesso) {
         this.usuario = usuario;
         this.senha =senha;
-        this.tipoAcesso = tipoAcesso;
-    }
-
-    //getters
-    public Long getId() {
-        return id;
-    }
-    
-    public String getSenha() {
-        return senha;
-    }
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public com.br.pdvpostocombustivel.enums.TipoAcesso getTipoAcesso() {
-        return tipoAcesso;
-    }
-
-    //setters
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-    public void setTipoAcesso(com.br.pdvpostocombustivel.enums.TipoAcesso tipoAcesso) {
         this.tipoAcesso = tipoAcesso;
     }
 }

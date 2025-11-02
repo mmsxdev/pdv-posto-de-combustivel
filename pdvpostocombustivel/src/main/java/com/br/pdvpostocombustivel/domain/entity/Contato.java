@@ -7,11 +7,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "contato")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Contato {
 
     @Id
@@ -36,43 +44,9 @@ public class Contato {
     @Column(length = 100, nullable = false)
     private String endereco;
 
-    // Construtores
-    public Contato() {
-    }
-
     public Contato(String telefone, String email, String endereco) {
         this.telefone = telefone;
         this.email = email;
-        this.endereco = endereco;
-    }
-
-    // Getters
-    public Long getId() {
-        return id;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    // Setters
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
 }
