@@ -1,6 +1,7 @@
 package com.br.pdvpostocombustivel.api.venda;
 
 import com.br.pdvpostocombustivel.api.venda.dto.VendaRequest;
+import com.br.pdvpostocombustivel.api.venda.dto.VendaFinalizarRequest;
 import com.br.pdvpostocombustivel.api.venda.dto.VendaResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,18 @@ public class VendaController {
     @PostMapping
     public ResponseEntity<VendaResponse> registrarVenda(@Valid @RequestBody VendaRequest vendaRequest) {
         return new ResponseEntity<>(vendaService.registrarVenda(vendaRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<VendaResponse>> getVendasPendentes() {
+        return ResponseEntity.ok(vendaService.getVendasPendentes());
+    }
+
+    @PutMapping("/{id}/finalizar")
+    public ResponseEntity<VendaResponse> finalizarVenda(
+            @PathVariable Long id,
+            @Valid @RequestBody VendaFinalizarRequest request) {
+        VendaResponse vendaFinalizada = vendaService.finalizarVendaPendente(id, request);
+        return ResponseEntity.ok(vendaFinalizada);
     }
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TipoProduto {
+    COMBUSTIVEL("Combustíveis"),
     LUBRIFICANTE("Lubrificantes"),
     ADITIVO("Aditivos"),
     CONVENIENCIA("Conveniência"),

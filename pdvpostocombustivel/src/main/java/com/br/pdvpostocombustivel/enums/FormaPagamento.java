@@ -5,7 +5,8 @@ public enum FormaPagamento {
     CARTAO_CREDITO("Cartão de Crédito"),
     CARTAO_DEBITO("Cartão de Débito"),
     PIX("PIX"),
-    A_PRAZO("A Prazo / Faturado");
+    A_PRAZO("A Prazo / Faturado"),
+    PENDENTE("Pendente");
 
     private final String descricao;
 

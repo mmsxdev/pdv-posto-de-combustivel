@@ -1,8 +1,9 @@
 package com.br.pdvpostocombustivel.api.venda;
 
 import com.br.pdvpostocombustivel.api.venda.dto.ItemVendaResponse;
-import com.br.pdvpostocombustivel.api.venda.dto.VendaRequest;
+import com.br.pdvpostocombustivel.api.venda.dto.VendaFinalizarRequest;
 import com.br.pdvpostocombustivel.api.venda.dto.VendaResponse;
+import com.br.pdvpostocombustivel.api.venda.dto.VendaRequest;
 import com.br.pdvpostocombustivel.domain.entity.*;
 import com.br.pdvpostocombustivel.domain.repository.*;
 import com.br.pdvpostocombustivel.domain.repository.EstoqueRepository;
@@ -37,6 +38,28 @@ public class VendaService {
         return vendaRepository.findAllByDataHoraBetween(dataInicio, dataFimAjustada).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<VendaResponse> getVendasPendentes() {
+        return vendaRepository.findAllBySituacaoVenda(SituacaoVenda.EM_ABERTO)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public VendaResponse finalizarVendaPendente(Long vendaId, VendaFinalizarRequest request) {
+        Venda venda = vendaRepository.findById(vendaId)
+                .orElseThrow(() -> new VendaException("Venda com ID " + vendaId + " não encontrada."));
+
+        if (venda.getSituacaoVenda() != SituacaoVenda.EM_ABERTO) {
+            throw new VendaException("Esta venda não está pendente e não pode ser finalizada.");
+        }
+
+        venda.setFormaPagamento(request.formaPagamento());
+        venda.setSituacaoVenda(SituacaoVenda.CONCLUIDA);
+        return toResponse(vendaRepository.save(venda));
     }
 
     @Transactional

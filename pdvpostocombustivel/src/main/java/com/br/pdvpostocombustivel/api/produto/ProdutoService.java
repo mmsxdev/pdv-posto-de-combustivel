@@ -79,7 +79,7 @@ public class ProdutoService {
 
     private ProdutoResponse toResponse(Produto produto) {
         return new ProdutoResponse(produto.getId(), produto.getNome(), produto.getReferencia(),
-                produto.getFornecedor(), produto.getMarca(), produto.getCategoria());
+                produto.getFornecedor(), produto.getMarca(), produto.getCategoria(), produto.getQuantidadeMinima());
     }
 
     private void fromRequest(Produto produto, ProdutoRequest request) {
@@ -88,5 +88,6 @@ public class ProdutoService {
         produto.setFornecedor(request.fornecedor());
         produto.setMarca(request.marca());
         produto.setCategoria(request.categoria());
+        produto.setQuantidadeMinima(request.quantidadeMinima());
     }
 }

@@ -42,6 +42,14 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.GET, "/api/vendas")
                             .hasAnyAuthority("ROLE_ADMINISTRADOR", "ROLE_GERENCIA");
 
+                    // Rotas de ABASTECIMENTO (Operação)
+                    auth.requestMatchers("/api/abastecimentos/**")
+                            .hasAnyAuthority("ROLE_ADMINISTRADOR", "ROLE_FUNCIONARIO");
+
+                    // Rota de DASHBOARD (Todos autenticados)
+                    auth.requestMatchers("/api/dashboard/**")
+                            .authenticated();
+
                     // Qualquer outra requisição precisa estar autenticada
                     auth.anyRequest().authenticated();
                 })

@@ -1,5 +1,8 @@
 package com.br.pdvpostocombustivel.api.estoque;
 
+
+import com.br.pdvpostocombustivel.domain.entity.Estoque;
+import com.br.pdvpostocombustivel.domain.repository.EstoqueRepository;
 import com.br.pdvpostocombustivel.api.estoque.dto.EstoqueRequest;
 import com.br.pdvpostocombustivel.api.estoque.dto.EstoqueResponse;
 import com.br.pdvpostocombustivel.domain.entity.Produto;
@@ -9,7 +12,9 @@ import com.br.pdvpostocombustivel.domain.repository.ProdutoRepository;
 import com.br.pdvpostocombustivel.exception.EstoqueException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +64,23 @@ public class EstoqueService {
             throw new EstoqueException("Registro de estoque com ID " + id + " não encontrado para exclusão.");
         }
         estoqueRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void darBaixa(Long produtoId, BigDecimal quantidade) {
+        Estoque estoque = estoqueRepository.findByProdutoId(produtoId)
+                .orElseThrow(() -> new RuntimeException("Estoque não encontrado para o produto ID: " + produtoId));
+
+        // Validação para garantir que há estoque suficiente
+        if (estoque.getQuantidade().compareTo(quantidade) < 0) {
+            throw new IllegalStateException(
+                    String.format("Estoque insuficiente para o produto '%s'. Em estoque: %.3f, Requisitado: %.3f",
+                            estoque.getProduto().getNome(), estoque.getQuantidade(), quantidade)
+            );
+        }
+
+        estoque.setQuantidade(estoque.getQuantidade().subtract(quantidade));
+        estoqueRepository.save(estoque);
     }
 
     private EstoqueResponse toResponse(Estoque estoque) {

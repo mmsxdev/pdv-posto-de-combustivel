@@ -3,7 +3,10 @@ package com.br.pdvpostocombustivel.api.produto.dto;
 import com.br.pdvpostocombustivel.enums.TipoProduto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
 
 public record ProdutoRequest(
         @NotBlank @Size(max = 100)
@@ -15,6 +18,8 @@ public record ProdutoRequest(
         @NotBlank @Size(max = 50)
         String marca,
         @NotNull
-        TipoProduto categoria
+        TipoProduto categoria,
+        @NotNull @PositiveOrZero
+        BigDecimal quantidadeMinima
 ) {
 }

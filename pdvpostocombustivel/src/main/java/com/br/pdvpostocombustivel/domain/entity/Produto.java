@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,10 @@ public class Produto {
     @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
     private TipoProduto categoria;
+
+    @NotNull
+    @Column(name = "quantidade_minima", nullable = false, precision = 10, scale = 2)
+    private BigDecimal quantidadeMinima = BigDecimal.ZERO;
 
     // RELACIONAMENTO 1..*: Um Produto pode ter vários registros de Estoque.
     // mappedBy = "produto": Indica que a entidade Estoque é a dona do relacionamento (ela tem a foreign key).
